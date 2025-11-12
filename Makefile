@@ -8,9 +8,11 @@
 PYTHON = python3
 LINT = pylint
 INSTALLER = pyinstaller
+UPX = upx
 
 # Source
 MAIN_PY = neoden_kicad.py
+PROJECT_NAME = neoden_kicad
 
 # Destination
 DIST_DIR = dist
@@ -36,7 +38,7 @@ test2:
 
 test_bin:
 	. ./venv/bin/activate
-	./dist/neoden_kicad --pos data/CPL-test.csv --out data/CPL-out.csv --feeder_map data/feeder_map.csv
+	./dist/$(PROJECT_NAME) --pos data/CPL-test.csv --out data/CPL-out.csv --feeder_map data/feeder_map.csv
 	deactivate
 
 lint:
@@ -46,6 +48,9 @@ install:
 	. ./venv/bin/activate
 	$(INSTALLER) -F $(MAIN_PY) --specpath $(DIST_DIR)
 	deactivate
+
+clean:
+	rm -rf $(DIST_DIR) build/ $(PROJECT_NAME).spec $(PROJECT_NAME).egg-info
 
 test_upload:
 	$(PYTHON) setup.py sdist
