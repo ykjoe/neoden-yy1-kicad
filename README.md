@@ -29,6 +29,15 @@ The Neoden YY1 needs to be told what footprints that it is using. Some common co
 
 The converter will leave footprints alone that it does not recognize. If you find one conversions that you'd like added to the list, please file an issue on github (https://github.com/elec-otago/neoden-yy1-kicad)
 
+## Feeder Map
+
+The Neoden YY1 has a number of feeders that are used to place components. The feeder map is a csv file that maps the feeder number to the component type. The default feeder map is contained in the feeder_map.csv file. This file should be copied to the same directory as the neoden_kicad script. 
+
+The feeder map file should contain the following columns:
+    value_regex: A regular expression that matches the value of the component.
+    package_regex: A regular expression that matches the package of the component.
+    feederNo: The feeder number to use for components that match the value and package regex.
+
 ### Author
 
 Written by Tim Molteno tim@elec.ac.nz
