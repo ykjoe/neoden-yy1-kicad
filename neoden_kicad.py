@@ -2,6 +2,7 @@
 #    Upload gains from local file to api.
 #    Tim Molteno 2023
 #    Phill Brown 2023
+#    Yongkang Zhou 2025
 
 import argparse
 import csv
@@ -13,9 +14,10 @@ if __name__ == "__main__":
         description="Convert KiCad files for use with Neoden YY1 pick and place machine.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("--pos", type=str, required=True, help="POS file name.")
-    parser.add_argument("--out", type=str, required=True, help="Output file name.")
-    parser.add_argument("--feeder_map", type=str, required=False, help="Feeder map file name.")
+    parser.add_argument("-s", "--pos", type=str, required=True, help="POS file name.")
+    parser.add_argument("-o", "--out", type=str, required=True, help="Output file name.")
+    parser.add_argument("-f","--feeder_map", type=str, required=False, help="Feeder map file name.")
+    parser.add_argument("-x", "--xlen", type=str, required=False, help="X-Length of the board, write down X-distance between right edge and zero point.")
 
     ARGS = parser.parse_args()
 
@@ -39,7 +41,14 @@ if __name__ == "__main__":
             feeder_map = list(reader)
         convert.update_feeder_map(feeder_map)
     else:
-        print("\033[33mWarning:\033[0m No feeder map file specified. Feeder numbers will be set to '0'.")
+        print("\033[33m\033[1mWarning:\033[0m \033[1mNo feeder map file specified. Feeder numbers will be set to '0'.\033[0m")
+
+    # Bottom side of the board
+    if ARGS.xlen:
+        convert.board_length = float(ARGS.xlen)
+    else:
+        convert.board_length = 0.0
+        print("\033[33m\033[1mWarning:\033[0m \033[1mNo X-Length specified. Position on bottom side may be incorrect.\033[0m")
 
     # Convert the input dictionary to the output dictionary
     output_neoden_csv_info = convert.neoden_csv_info(None)
