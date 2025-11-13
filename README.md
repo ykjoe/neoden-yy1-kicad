@@ -79,6 +79,8 @@ You can use this function by `--xlen` option. For example, if your PCB is 100mm 
 neoden_kicad --pos CPL-mypos.csv --out neoden_pos.csv --xlen 100
 ```
 
+Function `comp_pos_top` and `comp_pos_bottom` in `neoden_kicad/converter.py` are used to convert the position of the component to the top and bottom side respectively.
+
 ### Author
 
 Written by Tim Molteno tim@elec.ac.nz
