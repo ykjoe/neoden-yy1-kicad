@@ -54,7 +54,7 @@ if __name__ == "__main__":
     output_neoden_csv_info = convert.neoden_csv_info(None)
     output_data, output_header = convert.convert(new_data)
     ## Write the new CSV file here
-    with open(ARGS.out, "w") as f:
+    with open(ARGS.out, "w", newline='') as f:
         writer = csv.writer(f)
         writer.writerows(output_neoden_csv_info)
         writer.writerow(output_header)
