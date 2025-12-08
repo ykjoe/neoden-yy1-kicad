@@ -8,6 +8,7 @@ import argparse
 import csv
 import neoden_kicad.converter as convert
 
+
 if __name__ == "__main__":
     # Argument parser setup
     parser = argparse.ArgumentParser(
@@ -21,27 +22,38 @@ if __name__ == "__main__":
 
     ARGS = parser.parse_args()
 
-    # Read the CSV file here
-    fname = ARGS.pos
-    with open(fname, "r") as f:
-        reader = csv.reader(f)
-        data = list(reader)
 
-    header = data.pop(0)
-    new_data = []
-    for row in data:
-        new_data.append(dict(zip(header, row)))
+    # Read the CSV file here
+    try:
+        fname = ARGS.pos
+        with open(fname, "r") as f:
+            reader = csv.reader(f)
+            data = list(reader)
+
+        header = data.pop(0)
+        new_data = []
+        for row in data:
+            new_data.append(dict(zip(header, row)))
+    except Exception as e:
+        print(f"\033[31m\033[1mError:\033[0m \033[1mFailed to read input POS file '{fname}'\033[0m: {e}")
+        exit(1)
+
 
     # Load the feeder map from the CSV file
-    feeder_map = []
-    if ARGS.feeder_map:
-        with open(ARGS.feeder_map, 'r', encoding='utf-8') as f:
-            reader = csv.reader(f)
-            header = next(reader)
-            feeder_map = list(reader)
-        convert.update_feeder_map(feeder_map)
-    else:
-        print("\033[33m\033[1mWarning:\033[0m \033[1mNo feeder map file specified. Feeder numbers will be set to '0'.\033[0m")
+    try:
+        feeder_map = []
+        if ARGS.feeder_map:
+            with open(ARGS.feeder_map, 'r', encoding='utf-8') as f:
+                reader = csv.reader(f)
+                header = next(reader)
+                feeder_map = list(reader)
+            convert.update_feeder_map(feeder_map)
+        else:
+            print("\033[33m\033[1mWarning:\033[0m \033[1mNo feeder map file specified. Feeder numbers will be set to '0'.\033[0m")
+    except Exception as e:
+        print(f"\033[31m\033[1mError:\033[0m \033[1mFailed to read feeder map file '{ARGS.feeder_map}'\033[0m: {e}")
+        exit(1)
+    
 
     # Bottom side of the board
     if ARGS.xlen:
@@ -49,6 +61,7 @@ if __name__ == "__main__":
     else:
         convert.board_length = 0.0
         print("\033[33m\033[1mWarning:\033[0m \033[1mNo X-Length specified. Position on bottom side may be incorrect.\033[0m")
+
 
     # Convert the input dictionary to the output dictionary
     output_neoden_csv_info = convert.neoden_csv_info(None)
